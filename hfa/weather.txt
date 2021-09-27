@@ -1,0 +1,38 @@
+<?php
+$zipcode = $_COOKIE["zipcode"];
+?>
+<script>
+    async function xget() {
+
+        const response = await fetch('https://dataservice.accuweather.com/locations/v1/cities/search?apikey=tbKWC8cfGRdUhHBzjB1pxYRADJZhhqv8&q=<?= $zipcode ?>');
+        const data = await response.json();
+        locationKey = data[0].Key;
+        document.getElementById("ok").innerHTML = "key" + locationKey;
+        const response2 = await fetch('https://dataservice.accuweather.com/forecasts/v1/daily/5day/' + locationKey + '?apikey=tbKWC8cfGRdUhHBzjB1pxYRADJZhhqv8&details=true &metric=true');
+        const data2 = await response2.json();
+        document.getElementById("ok").innerHTML = data2.DailyForecasts[0].Date;
+        var text = "";
+        for (var i = 0; i < 5; i++) {
+            date = data2.DailyForecasts[i].Date;
+            mintemp = data2.DailyForecasts[i].Temperature.Minimum.Value;
+            maxtemp = data2.DailyForecasts[i].Temperature.Maximum.Value;
+            daysituation = data2.DailyForecasts[i].Day.LongPhrase;
+            d_rain = data2.DailyForecasts[i].Day.RainProbability;
+            nightsituation = data2.DailyForecasts[i].Night.LongPhrase;
+            n_rain = data2.DailyForecasts[i].Night.RainProbability;
+            hour = data2.DailyForecasts[i].HoursOfSun;
+            text += "<div class='date'><strong>Date </strong>: " + date + " </div>";
+            text += "<div class='mintemp'><strong>Minimum Tempereature </strong>: " + mintemp + "</div>";
+            text += "<div class='maxtemp'> <strong>Maximum Tempereature </strong>: " + maxtemp + "</div>";
+            text += "<div class='hrs'> <strong>Hours of sun </strong>: " + hour + " hrs.</div>";
+            text += "<div class='daysituation'><strong> Day </strong>: " + daysituation + "</div>";
+            text += "<div class='nghtsituation'> <strong>Night </strong>: " + nightsituation + "</div>";
+            text += "<div class='rain'><table> <tr><th colspan=2>Rain Probability </th></tr><tr><td> Day </td><td>" + d_rain + "</tr><tr><td> Night </td><td>" + n_rain + "</td></tr></table></div>";
+        }
+        document.getElementById("container").innerHTML = text;
+    }
+</script>
+<div id="container">
+    <input type="button" onclick="xget()">
+</div>
+<span id="ok"></span>

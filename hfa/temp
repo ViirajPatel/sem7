@@ -1,0 +1,40 @@
+
+input {
+            background-color: #ccc;
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 5px groove #ccc;
+            box-sizing: border-box;
+            box-shadow: 2px 0px 3px lightgrey;
+        }
+
+        input:hover {
+            background-color: #fff;
+            border: 5px ridge #ccc;
+        }
+
+        /* Set a style for all buttons */
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        /* Add a hover effect for buttons */
+        button:hover {
+            opacity: 0.8;
+        }
+
+
+
+
+        html {
+            scroll-behavior: smooth;
+
+        }
