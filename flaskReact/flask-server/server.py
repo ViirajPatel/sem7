@@ -34,14 +34,14 @@ def login():
             return render_template('index.html', msg = msg)
         else:
             msg = 'Incorrect username / password !'
-    return render_template('login.html', msg = msg)
+    return render_template('index.html', msg = msg)
   
 @app.route('/logout')
 def logout():
     session.pop('loggedin', None)
     session.pop('userid', None)
     session.pop('username', None)
-    return redirect(url_for('login'))
+    return redirect(url_for('index.html'))
   
 @app.route('/register', methods =['GET', 'POST'])
 def register():
