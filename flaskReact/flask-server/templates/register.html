@@ -2,20 +2,21 @@
 {% block body %}
 <!-- <div class='bg'>
   </div> -->
-<video autoplay muted loop id="myVideo">
-  <source src="bg.mp4" type="video/mp4">
-
-</video>
+<style>
+  hr{
+    box-shadow:rgb(204, 219, 232) 3px 3px 6px 6px , rgba(255, 255, 255, 0.5) 3px 3px 6px 1px outset;
+  }
+</style>
 <div class="container"
-  style="width: 40%;justify-items:center;margin:auto;z-index: 9999; box-shadow: rgb(204, 219, 232) 3px 3px 6px 6px , rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;background-color:whitesmoke ;padding: 5%;">
+  style="width: 40%;text-align:center;z-index: 9999; box-shadow: rgb(204, 219, 232) 3px 3px 6px 6px , rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;background-color:whitesmoke ;padding: 5%;">
 
   <main class="form-signin">
     <form action="{{ url_for('register') }}" method="post">
 
-      <h1 class="h3 mb-3 fw-normal">Registration</h1>
+      <h1 class="h3 mb-3 fw-normal"><b>Registration</b></h1><hr>
       <div class="form-floating" style="margin: 10px 10px 0 0;">
         <input type="text" class="form-control" id="name" name="name" placeholder="name">
-        <label for="floatingInput">name</label>
+        <label for="floatingInput">Name</label>
       </div>
       <div class="form-floating" style="margin: 10px 10px 0 0;">
         <input type="number" min=1000000000 max=9999999999 class="form-control" id="phoneno" name="phoneno"
@@ -39,7 +40,7 @@
           Already have account ? <a id="redirect" class="botton" href="{{url_for('login')}}"> Login here</a>
         </label>
       </div>
-      <br>
+      <hr>
       <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
       &nbsp;
       <div class="msg">{{ msg }}</div>
