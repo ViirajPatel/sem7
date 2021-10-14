@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <h1>Even though I am a fresher, I assure you that I will give my best and work to my full potential so that I can contribute as much as I can towards the growth and welfare of this great brand.”</h1>
   </React.StrictMode>,
   document.getElementById('root')
 );
