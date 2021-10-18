@@ -37,7 +37,9 @@ def new():
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
   #  data = yfinance.main("INFY")
     return render_template("index.html",graphJSON=graphJSON)
-
+@app.route("/")
+def home():
+    render_template("index_old.html")
 @app.route('/login', methods =['GET', 'POST'])
 def login():
     msg = ''
