@@ -29,17 +29,11 @@ mysql = MySQL(app)
 
 @app.route("/")
 def new():
-    sym = "INFY"
-    # download dataframe
-    data = pdr.get_data_yahoo(sym+".NS", start=date(2019,8,13),end=date(2021,9,13))
-    df = pd.DataFrame(data)
-    fig = px.line(df)
-    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
-  #  data = yfinance.main("INFY")
-    return render_template("index.html",graphJSON=graphJSON)
-@app.route("/")
+    return render_template("simple.html")
+@app.route("/home")
 def home():
-    render_template("index_old.html")
+   
+    return render_template('simple.html',  )
 @app.route('/login', methods =['GET', 'POST'])
 def login():
     msg = ''
