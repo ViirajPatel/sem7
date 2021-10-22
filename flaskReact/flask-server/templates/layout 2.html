@@ -38,6 +38,11 @@
       -ms-filter: blur(15px);
       filter: blur(15px);
     } */
+    #top-bar {
+    margin: 0;
+    overflow: hidden;
+    visibility: hidden;
+}
   </style>
   <meta charset="utf-8">
 
@@ -82,7 +87,7 @@
       
 
         <div class="flex-shrink-0 dropdown" align="right">
-          <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+          <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" style="width:fit-content" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
             <img src="static/user.png" alt="mdo" width="32" height="32" class="rounded-circle">
           </a>
           <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
@@ -104,12 +109,14 @@
       </div>
       <div class="bg-light border rounded-3">
         {% block right %} {% endblock %}
+        <!-- <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQYRipJ5REG7Na5wb1WeYd9SAh0_h915bJWKMeBHBZ0eYquh36INk-8w2uP5Yw0BM91p702_YV2qegK/pubhtml?gid=0&amp;single=true&amp;widget=true&amp;headers=false"></iframe></body> -->
+
       </div>
     </div>
   </div>
-  <div class="main">
+  <!-- <div class="main">
   {% block body %} {% endblock %}
-</div>
+</div> -->
 
 </body>
 

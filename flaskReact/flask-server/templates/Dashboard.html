@@ -1,0 +1,84 @@
+{% extends "layout 2.html" %}
+{% block title %}
+Dashboard
+{% endblock %}
+{% block left%}
+<script>
+  
+  async function fetching(){
+     
+    console.log("fasdkghj")
+    const response = await fetch("{{ url_for('static',filename='companies.json') }}");
+    const data =  await response.json();
+    console.log(typeof(data));
+    let a = "<table border =1  id='myTable'>";
+    for (let x = 0; x<1628;x++){
+      a+="<tr><td>"+data["Symbol"][x] + "</td><td>" + data["CompanyName"][x] + "</td></tr>";
+    }
+    a+="</table>";
+    console.log(a);
+    document.getElementById("companies").innerHTML=a;
+
+  }
+
+function myFunction() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("search");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
+}
+
+
+</script>
+
+
+<input type="search" name="search" id="search" onclick="fetching()" onkeyup="myFunction()">
+<div id="companies"></div>
+
+
+{% endblock %}
+
+
+{% block right %}   <style>
+        /* body {
+
+  align-items: center;
+  align-content: center;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: #f5f5f5;
+} */
+        iframe{
+            border: 3px;
+            align-self: center;
+            height: 80vh;
+            width: 100%;
+
+        }
+        
+
+
+    </style>
+    <script>
+
+//     window.setTimeout(function () {
+//   window.location.reload();
+// }, 60000);
+
+
+    </script>
+    <!-- <div class="container"> -->
+      <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQYRipJ5REG7Na5wb1WeYd9SAh0_h915bJWKMeBHBZ0eYquh36INk-8w2uP5Yw0BM91p702_YV2qegK/pubhtml?widget=true&amp;headers=false"></iframe><!-- </div> -->
+    {% endblock %}
