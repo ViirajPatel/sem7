@@ -6,14 +6,15 @@ Dashboard
 <script>
   
   async function fetching(){
-     
+    document.getElementById("companies").style.overflow="scroll";
+  document.getElementById("companies").style.height="350px";
     console.log("fasdkghj")
     const response = await fetch("{{ url_for('static',filename='companies.json') }}");
     const data =  await response.json();
     console.log(typeof(data));
     let a = "<table border =1  id='myTable'>";
     for (let x = 0; x<1628;x++){
-      a+="<tr><td>"+data["Symbol"][x] + "</td><td>" + data["CompanyName"][x] + "</td></tr>";
+      a+="<tr><td><a href="+data["Symbol"][x] +">"+data["Symbol"][x] + "</a></td><td>" + data["CompanyName"][x] + "</td></tr>";
     }
     a+="</table>";
     console.log(a);
@@ -22,6 +23,8 @@ Dashboard
   }
 
 function myFunction() {
+  
+
   var input, filter, table, tr, td, i, txtValue;
   input = document.getElementById("search");
   filter = input.value.toUpperCase();
@@ -39,13 +42,17 @@ function myFunction() {
     }       
   }
 }
-
+function clearf(){
+  document.getElementById("companies").style.overflow="scroll";
+  document.getElementById("companies").style.height="0px";
+  document.getElementById("companies").innerHTML="";
+}
 
 </script>
 
 
-<input type="search" name="search" id="search" onclick="fetching()" onkeyup="myFunction()">
-<div id="companies"></div>
+<input type="search" name="search" id="search" onclick="fetching()" onkeyup="myFunction()" onfocusout="clearf()">
+<div id="companies" ></div>
 
 
 {% endblock %}
