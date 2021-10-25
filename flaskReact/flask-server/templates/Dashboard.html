@@ -1,65 +1,100 @@
 {% extends "layout 2.html" %}
 {% block title %}
 Dashboard
+<script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
 {% endblock %}
-{% block left%}
+{% block left %}
 <script>
-  
-  async function fetching(){
-    document.getElementById("companies").style.overflow="scroll";
-  document.getElementById("companies").style.height="350px";
+  function searching(id) {
+   // document.getElementById('search').value="";
+    symbol  = document.getElementById(id).value;
+    console.log('onclick searching'+symbol);
+    document.getElementById('search').value=symbol;
+    document.getElementById('sc').value=symbol;
+  }
+  async function fetching() {
+   
+    document.getElementById("companies").style.overflow = "scroll";
+    document.getElementById("companies").style.height = "350px";
     console.log("fasdkghj")
     const response = await fetch("{{ url_for('static',filename='companies.json') }}");
-    const data =  await response.json();
-    console.log(typeof(data));
-    let a = "<table border =1  id='myTable'>";
-    for (let x = 0; x<1628;x++){
-      a+="<tr><td><a href="+data["Symbol"][x] +">"+data["Symbol"][x] + "</a></td><td>" + data["CompanyName"][x] + "</td></tr>";
+    const data = await response.json();
+    console.log(typeof (data));
+    let a = " <input type='button' class='btn-close' onclick='clearf()'><table border =1  padding='10px' cellspacing=10px  id='myTable'>";
+    for (let x = 0; x < 1628; x++) {
+      a += "<tr><td><input style='width:100%' type='submit' class='btn btn btn-light' id='symbol"+x+"' onclick='searching(this.id)'  value=" + data["Symbol"][x] + "></td><td>" + data["CompanyName"][x] + "</td></tr>";
     }
-    a+="</table>";
+    a += "</table>";
     console.log(a);
-    document.getElementById("companies").innerHTML=a;
+    document.getElementById("companies").innerHTML = a;
 
-  }
-
-function myFunction() {
   
-
-  var input, filter, table, tr, td, i, txtValue;
-  input = document.getElementById("search");
-  filter = input.value.toUpperCase();
-  table = document.getElementById("myTable");
-  tr = table.getElementsByTagName("tr");
-  for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td")[0];
-    if (td) {
-      txtValue = td.textContent || td.innerText;
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-        tr[i].style.display = "";
-      } else {
-        tr[i].style.display = "none";
-      }
-    }       
   }
-}
-function clearf(){
-  document.getElementById("companies").style.overflow="scroll";
-  document.getElementById("companies").style.height="0px";
-  document.getElementById("companies").innerHTML="";
-}
+
+  function myFunction() {
+
+
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("search");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("myTable");
+    tr = table.getElementsByTagName("tr");
+    for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[0];
+      if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+  }
+  function clearf() {
+    var valueBtn = document.getElementById("search").value;
+    console.log(valueBtn)
+    document.getElementById("companies").style.overflow = "scroll";
+    document.getElementById("companies").style.height = "0px";
+    // document.getElementById("companies").innerHTML = "";
+    document.getElementById("search").value= valueBtn;
+  }
 
 </script>
 
+<form action="" method="post">
+  <input type="search" name="search" id="search" onclick="fetching()" onkeyup="myFunction()" >
+  <input type="submit" value="Search">
 
-<input type="search" name="search" id="search" onclick="fetching()" onkeyup="myFunction()" onfocusout="clearf()">
-<div id="companies" ></div>
-
+</form>
+<span id='sc'>{{msg}}</span>
+<div id="companies">
+    </div>
+<div class="chart">
+  <script>
+    const chart = LightweightCharts.createChart(document.body, { width: 400, height: 300 });
+    const lineSeries = chart.addLineSeries();
+    lineSeries.setData([
+        { time: '2019-04-11', value: 80.01 },
+        { time: '2019-04-12', value: 96.63 },
+        { time: '2019-04-13', value: 76.64 },
+        { time: '2019-04-14', value: 81.89 },
+        { time: '2019-04-15', value: 74.43 },
+        { time: '2019-04-16', value: 80.01 },
+        { time: '2019-04-17', value: 96.63 },
+        { time: '2019-04-18', value: 76.64 },
+        { time: '2019-04-19', value: 81.89 },
+        { time: '2019-04-20', value: 74.43 },
+    ]);
+</script>
+</div>
 
 {% endblock %}
+{% block right %}
 
+ <style>
 
-{% block right %}   <style>
-        /* body {
+  /* body {
 
   align-items: center;
   align-content: center;
@@ -67,25 +102,24 @@ function clearf(){
   padding-bottom: 40px;
   background-color: #f5f5f5;
 } */
-        iframe{
-            border: 3px;
-            align-self: center;
-            height: 80vh;
-            width: 100%;
+  iframe {
+    border: 3px;
+    align-self: center;
+    height: 80vh;
+    width: 100%;
 
-        }
-        
-
-
-    </style>
-    <script>
+  }
+</style>
+<script>
 
 //     window.setTimeout(function () {
 //   window.location.reload();
 // }, 60000);
 
 
-    </script>
-    <!-- <div class="container"> -->
-      <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQYRipJ5REG7Na5wb1WeYd9SAh0_h915bJWKMeBHBZ0eYquh36INk-8w2uP5Yw0BM91p702_YV2qegK/pubhtml?widget=true&amp;headers=false"></iframe><!-- </div> -->
-    {% endblock %}
+</script>
+<!-- <div class="container"> -->
+<iframe
+  src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQYRipJ5REG7Na5wb1WeYd9SAh0_h915bJWKMeBHBZ0eYquh36INk-8w2uP5Yw0BM91p702_YV2qegK/pubhtml?widget=true&amp;headers=false"></iframe>
+<!-- </div> -->
+{% endblock %}

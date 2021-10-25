@@ -1,0 +1,31 @@
+   <!DOCTYPE html>
+    <html>
+      <head>
+        <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+      </head>
+    <body>
+    <script> async function datafetch(){
+        const chart = LightweightCharts.createChart(document.body, { width: 400, height: 300 });
+        const response = await fetch("IRCTC.json");
+        const data = await response.json();
+        console.log(data);
+        irctc
+        for(x in data){
+
+        }
+        const lineSeries = chart.addLineSeries();
+        const candlestick = chart.addCandlestickSeries();
+        const cdata = data.map(d=>{
+          return {time:d[0],open:parseFloat(d[1]),high:parseFloat(d[2]),low:parseFloat(d[3]),high:parseFloat(d[3])}
+        });
+
+        
+        candlestick.setData(cdata);
+        console.log(cdata);
+    }
+    
+    </script>
+    <input type="submit" value="" onclick="datafetch()">
+      
+    </body>
+    </html>

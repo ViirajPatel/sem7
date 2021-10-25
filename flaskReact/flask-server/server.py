@@ -28,13 +28,20 @@ mysql = MySQL(app)
 
 
 
-@app.route("/")
+@app.route("/",methods = ['GET','POST'])
 def new():
-    return render_template("Dashboard.html")
-@app.route("/home")
+    if request.method == 'GET' :
+        return render_template('Dashboard.html',  )
+    if request.method == 'POST':
+        dataSearch = request.form['search']
+        return render_template('Dashboard.html',msg = dataSearch)
+@app.route("/home",methods = ['GET','POST'])
 def home():
-   
-    return render_template('simple.html',  )
+    if request.method == 'GET' :
+        return render_template('Dashboard.html',  )
+    if request.method == 'POST':
+        dataSearch = request.form['search']
+        return render_template('Dashboard.html',msg = dataSearch)
 @app.route('/login', methods =['GET', 'POST'])
 def login():
     msg = ''

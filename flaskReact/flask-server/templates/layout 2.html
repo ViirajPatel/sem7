@@ -76,7 +76,7 @@
 
 <body >
   <header class="py-3 mb-3 border-bottom">
-    <div class="container-fluid d-grid gap-4 align-items-center" style="grid-template-columns: 0fr 1fr 3fr ;">
+    <div class="container-fluid d-grid gap-4 align-items-center" style="grid-template-columns: 0fr 1fr 1fr 3fr; ">
      
         <a href="#" >
           <img src="static/SYMBOL.png" alt="mdo" width="auto" height="50" class="rounded-circle">
@@ -91,8 +91,6 @@
             <img src="static/user.png" alt="mdo" width="32" height="32" class="rounded-circle">
           </a>
           <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
-            <li><a class="dropdown-item" href="#">New project...</a></li>
-            <li><a class="dropdown-item" href="#">Settings</a></li>
             <li><a class="dropdown-item" href="#">Profile</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="{{ url_for('logout')}}">Log out</a></li>
@@ -103,7 +101,7 @@
   </header>
 
   <div class="container-fluid pb-3">
-    <div class="d-grid gap-3" style="grid-template-columns: 1fr 2fr;">
+    <div class="d-grid gap-3" style="grid-template-columns: 2fr ; grid-template-rows: 1fr 1fr;">
       <div class="bg-light border rounded-3" style="overflow:auto">
         {% block left %}{% endblock %}
       </div>
