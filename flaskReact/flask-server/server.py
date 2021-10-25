@@ -26,7 +26,9 @@ app.config['MYSQL_DB'] = 'ps7'
   
 mysql = MySQL(app)
 
-
+@app.route("/chart")
+def chart():
+    return render_template("chart.html")
 
 @app.route("/",methods = ['GET','POST'])
 def new():

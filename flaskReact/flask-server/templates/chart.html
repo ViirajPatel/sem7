@@ -1,31 +1,37 @@
-   <!DOCTYPE html>
-    <html>
-      <head>
-        <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
-      </head>
-    <body>
-    <script> async function datafetch(){
-        const chart = LightweightCharts.createChart(document.body, { width: 400, height: 300 });
-        const response = await fetch("IRCTC.json");
-        const data = await response.json();
-        console.log(data);
-        irctc
-        for(x in data){
+<!DOCTYPE html>
+<html>
 
-        }
-        const lineSeries = chart.addLineSeries();
-        const candlestick = chart.addCandlestickSeries();
-        const cdata = data.map(d=>{
-          return {time:d[0],open:parseFloat(d[1]),high:parseFloat(d[2]),low:parseFloat(d[3]),high:parseFloat(d[3])}
-        });
+<head>
+  <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+</head>
 
-        
-        candlestick.setData(cdata);
-        console.log(cdata);
+<body>
+  <script>
+
+    async function fetching() {
+
+      const chart = LightweightCharts.createChart(document.body, { width: 400, height: 300 });
+      const response = await fetch("{{ url_for('static',filename='IRCTC.json') }}");
+      const data = await response.json();
+      console.log(data);
+      ////// CHANGE  INDEX VALUE FROM PYTHON FILE FOR DATAFRAME.
+      for (x in data) {
+
+      }
+      const lineSeries = chart.addLineSeries();
+      const candlestick = chart.addCandlestickSeries();
+      // const cdata = data.map(d => {
+      //   return { time: d[0], open: parseFloat(d[1]), high: parseFloat(d[2]), low: parseFloat(d[3]), high: parseFloat(d[3]) }
+      // });
+      console.log(data[["Open"]]);
+      //console.log("time:" + data[0][0] + ", open:" + parseFloat(data[1][0]) + ", high:" + parseFloat(data[2][0]) + ", low:" + parseFloat(d[3][0]) + ", high:" + parseFloat(d[3][0]));
+      //candlestick.setData(cdata);
+     // console.log(cdata);
     }
-    
-    </script>
-    <input type="submit" value="" onclick="datafetch()">
-      
-    </body>
-    </html>
+
+  </script>
+  <input type="submit" value="" onclick="fetching()">
+
+</body>
+
+</html>
