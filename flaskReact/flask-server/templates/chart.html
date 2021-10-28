@@ -10,29 +10,29 @@
       const response = await fetch("{{ url_for('static',filename='IRCTC.json') }}");
       const data = await response.json();
 
-console.log(new Date(data["Close"][1]))
+      console.log(new Date(data["Close"][1]))
 
-function dateScrape(dateString){
-var date = new Date(dateString);
+      function dateScrape(dateString) {
+        var date = new Date(dateString);
 
-let day = date.getDate();
-let month = date.getMonth()+1;
-let year = date.getFullYear();
+        let day = date.getDate();
+        let month = date.getMonth() + 1;
+        let year = date.getFullYear();
 
 console.log(day+"/"+month+"/"+year)
 finalDate = year + "/" + month + "/" + day;
 return finalDate
 
-}
-console.log(dateScrape(data["Date"][0]));
+      }
+      console.log(dateScrape(data["Date"][0]));
 
       let candleData = "";
       // console.log((data['Date'][0]));
       for (let x= 0; x<=247 ; x++) {
         candleData+="{ time: '"+data["Date"][x]/1000+"', open: "+parseFloat(data['Open'][x])+", high:"+ parseFloat(data['High'][x])+", low:"+ parseFloat(data['Low'][x])+", close:"+ parseFloat(data['Close'][x])+" },";
 
-      }
-      console.log(candleData);
+      // }
+      // console.log(candleData);
       const lineSeries = chart.addLineSeries();
       const candlestick = chart.addCandlestickSeries();
       // const cdata = data.map(d => {
