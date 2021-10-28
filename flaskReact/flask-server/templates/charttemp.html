@@ -1,0 +1,72 @@
+<head>
+    <title>数据统计计数</title>
+    <link rel="shortcut icon" href="http://www.appcoachs.com/wp-content/uploads/300x100-logo-small-5-300x100.png">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', {'packages':['bar']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function doDraw(obj)
+        {
+            var data = google.visualization.arrayToDataTable(obj.content);
+            var option = {
+                chart: {
+                    title: obj.name,
+                    subtitle: '',
+                }
+            };
+            var div = document.createElement("div");
+            div.style.width = 1500;
+            div.style.height = 500;
+            var chart = new google.charts.Bar(div);
+            document.body.appendChild(div);
+            chart.draw(data, option);
+        }
+
+        function drawChart() {
+            var jsonContent = {"click":[{"Total":60,"Valid":50,"Send":40,"Kafka":30,"Mongo":20,"Mysql":10,"Start":"2016-03-04T20:00:00Z","End":"2016-03-04T21:00:00Z"}],"m.conversion":[{"Total":60,"Valid":50,"Send":40,"Kafka":30,"Mongo":20,"Mysql":10,"Start":"2016-03-04T20:00:00Z","End":"2016-03-04T21:00:00Z"}],"m.impression":[{"Total":60,"Valid":50,"Send":40,"Kafka":30,"Mongo":20,"Mysql":10,"Start":"2016-03-04T20:00:00Z","End":"2016-03-04T21:00:00Z"}],"m.request":[{"Total":60,"Valid":50,"Send":40,"Kafka":30,"Mongo":20,"Mysql":10,"Start":"2016-03-04T20:00:00Z","End":"2016-03-04T21:00:00Z"}],"m.response":[{"Total":60,"Valid":50,"Send":40,"Kafka":30,"Mongo":20,"Mysql":10,"Start":"2016-03-04T20:00:00Z","End":"2016-03-04T21:00:00Z"}],"m.transaction":[{"Total":60,"Valid":50,"Send":40,"Kafka":30,"Mongo":20,"Mysql":10,"Start":"2016-03-04T20:00:00Z","End":"2016-03-04T21:00:00Z"}],"m2.conversion":[{"Total":60,"Valid":50,"Send":40,"Kafka":30,"Mongo":20,"Mysql":10,"Start":"2016-03-04T20:00:00Z","End":"2016-03-04T21:00:00Z"}],"m2.online.click":[{"Total":60,"Valid":50,"Send":40,"Kafka":30,"Mongo":20,"Mysql":10,"Start":"2016-03-04T20:00:00Z","End":"2016-03-04T21:00:00Z"}],"m2.online.impression":[{"Total":60,"Valid":50,"Send":40,"Kafka":30,"Mongo":20,"Mysql":10,"Start":"2016-03-04T20:00:00Z","End":"2016-03-04T21:00:00Z"}],"m2.online.request":[{"Total":60,"Valid":50,"Send":40,"Kafka":30,"Mongo":20,"Mysql":10,"Start":"2016-03-04T20:00:00Z","End":"2016-03-04T21:00:00Z"}],"m2.online.response":[{"Total":60,"Valid":50,"Send":40,"Kafka":30,"Mongo":20,"Mysql":10,"Start":"2016-03-04T20:00:00Z","End":"2016-03-04T21:00:00Z"}]};    
+            for (var i = 0; i < Object.keys(jsonContent).length; i++)
+            {
+                var jsonKey = Object.keys(jsonContent)[i];
+                var tableJson = eval("jsonContent['" + jsonKey + "']");
+                var hourly = new Object();
+                hourly.name = jsonKey + ".Hourly";
+                hourly.content = new Array();
+                hourly.content[0] = new Array("Hour", "Total", "Valid", "Send", "Kafka", "Mongo");
+                var daily = new Object();
+                daily.name = jsonKey + ".Hourly";
+                daily.content = new Array();
+                daily.content[0] = new Array("Day", "Total", "Valid", "Send", "Kafka", "Mongo");
+                for (var tableIndex = 0; tableIndex < tableJson.length; tableIndex ++)
+                {
+                    var start = new Date(tableJson[tableIndex].Start);
+                    var end = new Date(tableJson[tableIndex].End);
+                    var hourTime = 3600000; // 3600000 = 60 * 60 * 1000
+                    var dayTime = 86400000; // 86400000 = 60 * 60 * 24 * 1000
+                    if (end - start == hourTime)
+                    {
+                        var timef = start.getFullYear() + "年" + (start.getMonth() + 1) + "月" + start.getDate() + "日" + start.getHours() + "时"; 
+                        hourly.content[hourly.content.length] = new Array(timef, tableJson[tableIndex].Total, tableJson[tableIndex].Valid, tableJson[tableIndex].Send, tableJson[tableIndex].Kafka, tableJson[tableIndex].Mongo);
+                    }
+                    else if(end - start == dayTime)
+                    {
+                        var timef = start.getFullYear() + "年" + (start.getMonth() + 1) + "月" + start.getDate() + "日";
+                        daily.content[daily.content.length] =   new Array(timef, tableJson[tableIndex].Total, tableJson[tableIndex].Valid, tableJson[tableIndex].Send, tableJson[tableIndex].Kafka, tableJson[tableIndex].Mongo);
+                    }
+                }
+                if (hourly.content.length > 1)
+                {
+                    doDraw(hourly);
+                }
+                if (daily.content.length >1)
+                {
+                    doDraw(daily);
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+    <body onclick = 'dataChart()'>
+</body>
+</html

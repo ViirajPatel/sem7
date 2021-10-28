@@ -26,9 +26,18 @@ app.config['MYSQL_DB'] = 'ps7'
   
 mysql = MySQL(app)
 
-@app.route("/chart")
+@app.route("/chart",methods = ['GET','POST'])
 def chart():
-    return render_template("chart.html")
+    if request.method == "POST":
+        dataSearch = request.form['search']
+        if dataSearch == "":
+            err = "Please enter Symbol"
+            return render_template("Dashboard.html",err=err)
+        else:
+            return render_template("chart.html",symbol = dataSearch)
+
+    else:
+        return render_template("Dashboard.html")
 
 @app.route("/",methods = ['GET','POST'])
 def new():

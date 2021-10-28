@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Sep 27 14:36:49 2019
-
-@author: Kaushik
-"""
-#**************** IMPORT PACKAGES ********************
 from flask import Flask, render_template, request, flash, redirect, url_for
 from alpha_vantage.timeseries import TimeSeries
 import pandas as pd
@@ -16,6 +9,7 @@ plt.style.use('ggplot')
 import math, random
 from datetime import datetime
 import datetime as dt
+import yfinance as yf
 import tweepy
 import preprocessor as p
 import re
@@ -25,11 +19,6 @@ import constants as ct
 from Tweet import Tweet
 import nltk
 nltk.download('punkt')
-from pandas_datareader import data as pdr
-import pandas as pd
-from datetime import date
-import yfinance as yf
-yf.pdr_override()
 
 # Ignore Warnings
 import warnings
@@ -80,13 +69,6 @@ def insertintotable():
             df['Adj Close']=data['5. adjusted close']
             df['Volume']=data['6. volume']
             df.to_csv(''+quote+'.csv',index=False)
-       
-        # download dataframe
-        # data = pdr.get_data_yahoo(quote+".NS", start=date(2019,8,13),end=max)
-        # df = pd.DataFrame(data)
-        # df.to_csv(quote+".csv")
-        # data = yf.download(tickers=quote+'.NS', period='1d', interval='5m')
-        # data.to_csv(quote+".csv")
         return
 
     #******************** ARIMA SECTION ********************
@@ -501,20 +483,3 @@ def insertintotable():
 if __name__ == '__main__':
    app.run()
    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
