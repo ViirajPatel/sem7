@@ -8,7 +8,8 @@ Login
     box-shadow:rgb(204, 219, 232) 3px 3px 6px 6px , rgba(255, 255, 255, 0.5) 3px 3px 6px 1px outset;
   }
 </style>
-<div class="container"
+
+<div  class="container"
 style="width: 40%;text-align: center;z-index: 9999; box-shadow: rgb(204, 219, 232) 3px 3px 6px 6px , rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;background-color:whitesmoke ;padding: 5%;">
     
     <main class="form-signin">
@@ -34,7 +35,8 @@ style="width: 40%;text-align: center;z-index: 9999; box-shadow: rgb(204, 219, 23
        
         <hr>
         <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
-        <div class="msg">{{ msg }}</div>
+        <br><hr>
+        <div class="msg"><span style="color: lightseagreen;">{{ msg }}</span><span style="color: tomato;">{{ err }}</span></div>
      
       </form>
     </main>

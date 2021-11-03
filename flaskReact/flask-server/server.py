@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import re
-import hello  
+ 
 from mainFiles import yfinance
 import plotly.express as px
 import plotly
@@ -26,18 +26,31 @@ app.config['MYSQL_DB'] = 'ps7'
   
 mysql = MySQL(app)
 
+
+#######------MSG STRINGS--------#######
+loginErr = 'Please Login First!!'
+
+
+
 @app.route("/chart",methods = ['GET','POST'])
 def chart():
-    if request.method == "POST":
-        dataSearch = request.form['search']
-        if dataSearch == "":
-            err = "Please enter Symbol"
-            return render_template("Dashboard.html",err=err)
-        else:
-            return render_template("chart.html",symbol = dataSearch)
+    if session['loggedin'] == True:
+        if request.method == "POST":
+            dataSearch = request.form['search']
+            if dataSearch == "":
+                err = "Please enter Symbol"
+                return render_template("Dashboard.html",err=err)
+            else:
+                return render_template("chart.html",symbol = dataSearch)
 
+        else:
+            return render_template("Dashboard.html")
     else:
-        return render_template("Dashboard.html")
+        return render_template("login.html",err =loginErr)
+
+
+
+
 
 @app.route("/",methods = ['GET','POST'])
 def new():
@@ -46,13 +59,24 @@ def new():
     if request.method == 'POST':
         dataSearch = request.form['search']
         return render_template('Dashboard.html',msg = dataSearch)
+
+
+
+
 @app.route("/home",methods = ['GET','POST'])
 def home():
-    if request.method == 'GET' :
-        return render_template('Dashboard.html',  )
-    if request.method == 'POST':
-        dataSearch = request.form['search']
-        return render_template('Dashboard.html',msg = dataSearch)
+    if session['loggedin'] == True:
+        if request.method == 'GET' :
+            return render_template('Dashboard.html',  )
+        if request.method == 'POST':
+            dataSearch = request.form['search']
+            return render_template('Dashboard.html',msg = dataSearch)
+    else:
+        return render_template("login.html", err=loginErr)
+
+
+
+
 @app.route('/login', methods =['GET', 'POST'])
 def login():
     msg = ''
@@ -67,18 +91,28 @@ def login():
             session['userid'] = account['userid']
             session['email'] = account['email']
             msg = account["name"]
-            return render_template('index.html', msg = msg)
+            logged_in = 1
+            return render_template('Dashboard.html', msg = msg)
         else:
             msg = 'Incorrect name / password !'
     return render_template('login.html', msg = msg)
+
+
+
+
+
   
 @app.route('/logout')
 def logout():
     session.pop('loggedin', None)
     session.pop('userid', None)
     session.pop('name', None)
+    logged_in =0
     return redirect(url_for('login'))
   
+
+
+
 @app.route('/register', methods =['GET', 'POST'])
 def register():
     msg = ''
@@ -105,6 +139,21 @@ def register():
     elif request.method == 'POST':
         msg = 'Please fill out the form !'
     return render_template('register.html', msg = msg)
+
+
+
+
+
+
+@app.route("/watchList")
+def watchList():
+    return render_template('watchList.html')
+
+
+
+
+
+
 
 if __name__ =='__main__':  
     app.run(debug = True,port=8000)  
