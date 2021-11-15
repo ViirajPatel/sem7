@@ -54,6 +54,7 @@
       visibility: hidden;
     }
   </style>
+  
   <meta charset="utf-8">
 
   <meta name="generator" content="Hugo 0.88.1">
@@ -99,16 +100,40 @@
 
 <body>
   <header class="py-3 mb-3 border-bottom">
-    <div class="container-fluid d-grid gap-4 align-items-center" style="grid-template-columns: 0fr 1fr 3fr; ">
+    <div class="container-fluid d-grid gap-4 align-items-center" style="grid-template-columns: 0fr 3fr 1.5fr 1fr; ">
 
       <a href="#">
         <img src="static/SYMBOL.png" alt="mdo" width="auto" height="50" class="rounded-circle">
       </a>
       <h3>Stock Price Prediction</h3>
 
-
-
-
+    <nav class="navbar navbar-expand-lg navbar-light ">
+      <div class="container-fluid">
+    
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{{ url_for('home') }}">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{{ url_for('predict') }}">Predict</a>
+            </li>
+            
+    
+          </ul>
+          <form class="d-flex" method="post" action="{{ url_for('chart') }}">
+            <input class="form-control me-2" type="search" name='search' placeholder="BSE:SYMBOL" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+          </form>
+        </div>
+      </div>
+    </nav>
+     
+   
 
       <div class="flex-shrink-0 dropdown" align="right">
         <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" style="width:fit-content"
@@ -126,6 +151,7 @@
 
     </div>
   </header>
+ 
 
   {% block start %}{% endblock %}
 

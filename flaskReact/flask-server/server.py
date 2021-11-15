@@ -34,17 +34,20 @@ loginErr = 'Please Login First!!'
 
 @app.route("/chart",methods = ['GET','POST'])
 def chart():
-    if session['loggedin'] == True:
-        if request.method == "POST":
-            dataSearch = request.form['search']
-            if dataSearch == "":
-                err = "Please enter Symbol"
-                return render_template("Dashboard.html",err=err)
-            else:
-                return render_template("chart.html",symbol = dataSearch)
 
-        else:
-            return render_template("Dashboard.html")
+    if session.get('loggedin')== True:
+        # if request.method == "POST":
+        dataSearch = request.form['search']
+            # if dataSearch == "":
+            #     err = "Please enter Symbol"
+        arryList = ['BSE:TCS','BSE:ITC','BSE:IDEA']
+        jsonList = json.dumps(arryList)
+        return render_template("chart.html", symbol=dataSearch, arryList=jsonList, arrylen=len(arryList))
+            # else:
+            #     return render_template("chart.html",symbol = dataSearch)
+
+        # else:
+        #     return render_template("Dashboard.html")
     else:
         return render_template("login.html",err =loginErr)
 
@@ -61,11 +64,18 @@ def new():
         return render_template('Dashboard.html',msg = dataSearch)
 
 
+@app.route("/predict")
+def predict():
+    return render_template('predict.html')
+
+
+    
 
 
 @app.route("/home",methods = ['GET','POST'])
 def home():
-    if session['loggedin'] == True:
+    if session.get('loggedin')== True: 
+
         if request.method == 'GET' :
             return render_template('Dashboard.html',  )
         if request.method == 'POST':
@@ -145,9 +155,6 @@ def register():
 
 
 
-@app.route("/watchList")
-def watchList():
-    return render_template('watchList.html')
 
 
 
