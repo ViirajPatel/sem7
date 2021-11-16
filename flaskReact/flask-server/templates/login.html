@@ -2,6 +2,8 @@
 {% block title %}
 Login
 {% endblock %}
+{% block link %} {{url_for('about')}} {% endblock %}
+{% block linkName %} About Us {% endblock %}
 {% block body %}
 <style>
   hr{
@@ -29,7 +31,7 @@ style="width: 40%;text-align: center;z-index: 9999; box-shadow: rgb(204, 219, 23
         <br>
         <div class="checkbox mb-3">
           <label>
-            Don't have account ? <a class="bottom" href="{{url_for('register')}}"> Sign Up here</a>
+            Don't have an account ? <a class="bottom" href="{{url_for('register')}}"> Sign Up here</a>
           </label>
         </div>
        

@@ -38,6 +38,37 @@
       filter: blur(15px);
     } */
   </style>
+   <header class="py-3 mb-3 border-bottom" >
+    <div class="container-fluid d-grid gap-4 align-items-center" style="grid-template-columns: 0fr 3fr 0.5fr ;">
+     
+      
+      <a href="#">
+        <img src="static/SYMBOL.png" alt="mdo" width="auto" height="50" class="rounded-circle">
+      </a>
+      <h3>Stock Price Prediction</h3>
+      <nav class="navbar navbar-expand-lg navbar-light ">
+        <div class="container-fluid">
+      
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href={% block link %} {% endblock %}>{% block linkName %} {% endblock %}</a>
+              </li>
+             
+              
+      
+            </ul>
+          
+          </div>
+        </div>
+      </nav>
+    
+   
+ </header>
   <meta charset="utf-8">
 
   <meta name="generator" content="Hugo 0.88.1">
@@ -69,5 +100,5 @@
 </div>
 
 </body>
-
+{% extends "footer.html" %}
 </html>

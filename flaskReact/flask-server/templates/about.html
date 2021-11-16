@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block title %}
+About
+{% endblock %}
+{% block link %} {{url_for('login')}} {% endblock %}
+{% block linkName %} Login {% endblock %}
+{% block body %}
+<div class="container" style="width: 40%;text-align: center; padding: 5%;">
+    <h2>About</h2>
+    <span style="text-align: justify;">
+        The project “Stock Price Prediction” is mainly created for predicting stock’s price. It also provides the information.
+        The prediction is based on stock’s historical price data. So, system requires input as a stocks previous data (at least 2-3 years data).
+        
+    </span>
+    <hr>
+    <h2>Contact Us</h2>
+    <span style="text-align: justify;">
+       Developer Name - Viraj Patel
+       Contact Number - +91 70465 29350
+       Email          - 06-0299-2018@student.aau.in
+        
+    </span>
+</div>
+
+{% endblock %}

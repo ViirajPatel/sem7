@@ -30,7 +30,9 @@ mysql = MySQL(app)
 #######------MSG STRINGS--------#######
 loginErr = 'Please Login First!!'
 
-
+@app.route("/about")
+def about():
+    return render_template('about.html')
 
 @app.route("/chart",methods = ['GET','POST'])
 def chart():
@@ -40,6 +42,11 @@ def chart():
         dataSearch = request.form['search']
             # if dataSearch == "":
             #     err = "Please enter Symbol"
+      
+ 
+     
+
+     
         arryList = ['BSE:TCS','BSE:ITC','BSE:IDEA']
         jsonList = json.dumps(arryList)
         return render_template("chart.html", symbol=dataSearch, arryList=jsonList, arrylen=len(arryList))
@@ -53,7 +60,9 @@ def chart():
 
 
 
-
+@app.route("/profile")
+def profile():
+    return render_template('profile.html')
 
 @app.route("/",methods = ['GET','POST'])
 def new():
@@ -64,10 +73,12 @@ def new():
         return render_template('Dashboard.html',msg = dataSearch)
 
 
-@app.route("/predict")
+@app.route("/predict",methods = ['GET','POST'])
 def predict():
-    return render_template('predict.html')
-
+    if request.method == 'GET' :
+        return render_template('predict.html')
+    if request.method == 'POST':
+        return render_template('predictResult.html')
 
     
 
@@ -104,8 +115,8 @@ def login():
             logged_in = 1
             return render_template('Dashboard.html', msg = msg)
         else:
-            msg = 'Incorrect name / password !'
-    return render_template('login.html', msg = msg)
+            err = 'Incorrect name / password !'
+    return render_template('login.html', err = err)
 
 
 

@@ -1,0 +1,79 @@
+{% extends "layout 2.html" %}
+{% block title %}
+
+Prediction
+
+{% endblock %}
+{% block start %}
+
+<div class="container" style="width: 80%; height: 70vh;overflow: scroll;text-align: justify;z-index: 9999; box-shadow: rgb(204, 219, 232) 3px 3px 6px 6px , rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;background-color:whitesmoke ;padding: 5%;">
+    <script>
+        function searching(id) {
+          // document.getElementById('search').value="";
+          symbol = document.getElementById(id).value;
+          console.log('onclick searching' + symbol);
+          document.getElementById('search').value = symbol;
+          document.getElementById('sc').value = symbol;
+        }
+        async function fetching() {
+
+          document.getElementById("companies").style.overflow = "scroll";
+          document.getElementById("companies").style.height = "350px";
+          console.log("fasdkghj")
+          const response = await fetch("{{ url_for('static',filename='companies.json') }}");
+          const data = await response.json();
+          console.log(typeof (data));
+          let a = " <input type='button' class='btn-close' onclick='clearf()'><table border =1  padding='10px' cellspacing=10px  id='myTable'>";
+          for (let x = 0; x < 1628; x++) {
+            a += "<tr><td><input style='width:100%' type='submit' class='btn btn btn-light' id='symbol" + x + "' onclick='searching(this.id)'  value=" + data["Symbol"][x] + "></td><td>" + data["CompanyName"][x] + "</td></tr>";
+          }
+          a += "</table>";
+          console.log(a);
+          document.getElementById("companies").innerHTML = a;
+
+
+        }
+
+        function myFunction() {
+            console.log("I'm in!!!!!!");
+
+          var input, filter, table, tr, td, i, txtValue;
+          input = document.getElementById("search");
+          filter = input.value.toUpperCase();
+          table = document.getElementById("myTable");
+          tr = table.getElementsByTagName("tr");
+          for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+              txtValue = td.textContent || td.innerText;
+              if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+              } else {
+                tr[i].style.display = "none";
+              }
+            }
+          }
+        }
+        function clearf() {
+          var valueBtn = document.getElementById("search").value;
+          console.log(valueBtn)
+          document.getElementById("companies").style.overflow = "scroll";
+          document.getElementById("companies").style.height = "0px";
+          // document.getElementById("companies").innerHTML = "";
+          document.getElementById("search").value = valueBtn;
+        }
+
+      </script>
+
+      <form action="{{url_for('predict')}}" method="post">
+        <input type="search" name="search" id="search" onclick="fetching()" onkeyup="myFunction()">
+        <input type="submit" value="Search">
+
+      </form>
+      <span id='sc'>{{err}}</span>
+      <div id="companies">
+    </div>
+</div>
+
+
+{% endblock %}
