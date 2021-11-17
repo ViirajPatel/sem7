@@ -101,6 +101,7 @@ def home():
 @app.route('/login', methods =['GET', 'POST'])
 def login():
     msg = ''
+    err=''
     if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
         email = request.form['email']
         password = request.form['password']
@@ -128,7 +129,6 @@ def logout():
     session.pop('loggedin', None)
     session.pop('userid', None)
     session.pop('name', None)
-    logged_in =0
     return redirect(url_for('login'))
   
 
