@@ -73,10 +73,15 @@ def new():
         return render_template('Dashboard.html',msg = dataSearch)
 
 
-@app.route("/predict",methods = ['GET','POST'])
+@app.route("/predict")
 def predict():
-    if request.method == 'GET' :
-        return render_template('predict.html')
+    return render_template('predict.html')
+  
+
+@app.route("/predictResult", methods=['GET', 'POST'])
+def predictResult():
+    if request.method == 'GET':
+        return render_template('predictResult.html')
     if request.method == 'POST':
         return render_template('predictResult.html')
 
