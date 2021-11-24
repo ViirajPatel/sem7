@@ -76,6 +76,10 @@ def new():
 @app.route("/predict")
 def predict():
     return render_template('predict.html')
+
+@app.route("/watchList")
+def watchList():
+    return render_template('watchList.html')
   
 
 @app.route("/predictResult", methods=['GET', 'POST'])
