@@ -5,10 +5,10 @@ import MySQLdb.cursors
 import re
 import mysql.connector
 import subprocess
-
+import numpy as np
 from mainFiles import yfinance,prophetModel
 import plotly.express as px
-import plotly
+
 
 from pandas_datareader import data as pdr
 import pandas as pd
@@ -59,7 +59,7 @@ def chart():
      
         arryList = ['BSE:TCS','BSE:ITC','BSE:IDEA']
         jsonList = json.dumps(arryList)
-        return render_template("chart.html", symbol=dataSearch, arryList=jsonList, arrylen=len(arryList))
+        return render_template("chart.html",  symbol=dataSearch, arryList=jsonList, arrylen=len(arryList))
             # else:
             #     return render_template("chart.html",symbol = dataSearch)
 
@@ -100,11 +100,22 @@ def watchList():
         count  = int(request.form['count'])
         print(type(count))
 
-        watchListArr=[0]
-        for c in range(1,int(count)):
-            watchListArr.append=request.form['symbol'+c]
-        print(watchListArr)
-        return render_template('watchList.html',msg=count)
+        watchListArr=[]
+        userid = str(session['userid'])
+        for c in range(0,int(count)):
+            # watchListArr.append(request.form['symbol'+str(c)])
+            cursor.execute(
+                "INSERT INTO `stockportfolio`(`userid`, `stocks`) VALUES('"+userid+"', '"+request.form['symbol'+str(c+1)]+"')")
+            
+        arrJ = json.dumps(watchListArr)
+        print(arrJ)
+  
+      
+        # cursor.execute("INSERT INTO `stockportfolio`(`userid`, `stocks`) VALUES (`"+userid+"`, `"+arrJ+"`)")
+        # cursor.execute('INSERT INTO `stockportfolio`(`stocks`) VALUES( `["NSE: RELIANCE", "NSE: INFY"]`)')
+        mydb.commit()
+
+        return render_template('watchList.html', msg=count )
   
 
 @app.route("/predictResult", methods=['GET', 'POST'])
@@ -112,7 +123,7 @@ def predictResult():
     if request.method == 'GET':
         return render_template('predictResult.html')
     if request.method == 'POST':
-        return render_template('predictResult.html')
+        return render_template('predictResult.html' )
 
     
 
@@ -168,9 +179,9 @@ def login():
             session['loggedin'] = True
             session['userid'] = account[0]
             session['email'] = account[3]
-            msg = account[1]
+            username = "Hello!"+account[1]
             # logged_in = 1
-            return render_template('Dashboard.html', msg=msg)
+            return render_template('Dashboard.html', username=username)
         else:
             err = 'Incorrect name / password !' 
     return render_template('login.html', err=err)
