@@ -91,6 +91,20 @@ def predict():
     print(result)
     subprocess.call(('prophetModel.py'))
     return render_template('predict.html')
+
+@app.route("/watchList",methods = ['GET','POST'])
+def watchList():
+    if request.method == 'GET':
+        return render_template('watchList.html')
+    if request.method == 'POST':
+        count  = int(request.form['count'])
+        print(type(count))
+
+        watchListArr=[0]
+        for c in range(1,int(count)):
+            watchListArr.append=request.form['symbol'+c]
+        print(watchListArr)
+        return render_template('watchList.html',msg=count)
   
 
 @app.route("/predictResult", methods=['GET', 'POST'])
