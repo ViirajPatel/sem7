@@ -1,0 +1,29 @@
+import pandas as pd
+from prophet import Prophet
+
+import numpy as np
+import plotly.graph_objects as go
+import yfinance as yf
+from sklearn.metrics import r2_score, mean_absolute_error
+
+
+def predictProphet(quote, daysToPredict):
+    data = yf.download(tickers=quote + '.NS', period='5y', interval='1d')
+    data.to_csv("savedFiles/"+quote+".csv")
+    df_temp = pd.read_csv("savedFiles/"+quote+".csv")
+    df_temp.tail()
+    df_temp.rename(columns={df_temp.columns[0]:"Datetime"})
+    df=df_temp[[df_temp.columns[0],"Close"]]
+    df.columns = ['ds', 'y']
+    m = Prophet(interval_width=0.9, daily_seasonality=True)
+    model = m.fit(df)
+    future = m.make_future_dataframe(periods=daysToPredict, freq='D')
+    forecast = m.predict(future)
+    se = np.square(forecast.loc[:, 'yhat'] - df["y"])
+    mse = np.mean(se)
+    rmse = np.sqrt(mse)
+    mae = mean_absolute_error(df['y'], forecast.loc[:, 'yhat'][:-daysToPredict])
+    r2 = r2_score(df['y'], forecast.loc[:, 'yhat'][:-daysToPredict])
+    plotted = m.plot(forecast)
+    plotted.savefig("savedFiles/chartProphet.png")
+    return rmse,mae,r2,plotted

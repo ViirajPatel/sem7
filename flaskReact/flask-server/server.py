@@ -3,8 +3,10 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import re
- 
-from mainFiles import yfinance
+import mysql.connector
+import subprocess
+
+from mainFiles import yfinance,prophetModel
 import plotly.express as px
 import plotly
 
@@ -18,13 +20,21 @@ app = Flask(__name__)
   
   
 app.secret_key = 'vjp'
+mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="",
+    database="ps7"
+)
+
+cursor = mydb.cursor()
   
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'ps7'
+# app.config['MYSQL_HOST'] = 'localhost'
+# app.config['MYSQL_USER'] = 'root'
+# app.config['MYSQL_PASSWORD'] = ''
+# app.config['MYSQL_DB'] = 'ps7'
   
-mysql = MySQL(app)
+# mysql = MySQL(app)
 
 
 #######------MSG STRINGS--------#######
@@ -72,9 +82,14 @@ def new():
         dataSearch = request.form['search']
         return render_template('Dashboard.html',msg = dataSearch)
 
-
+        
 @app.route("/predict")
 def predict():
+    quote = "itc"
+    days= 100
+    result  = prophetModel.predictProphet(quote,days)
+    print(result)
+    subprocess.call(('prophetModel.py'))
     return render_template('predict.html')
   
 
@@ -103,29 +118,48 @@ def home():
 
 
 
-@app.route('/login', methods =['GET', 'POST'])
+# @app.route('/login', methods =['GET', 'POST'])
+# def login():
+#     msg = ''
+#     err=''
+#     if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
+#         email = request.form['email']
+#         password = request.form['password']
+#         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+#         cursor.execute('SELECT * FROM user WHERE email = % s AND password = % s', (email, password, ))
+#         account = cursor.fetchone()
+#         if account:
+#             session['loggedin'] = True
+#             session['userid'] = account['userid']
+#             session['email'] = account['email']
+#             msg = account["name"]
+#             logged_in = 1
+#             return render_template('Dashboard.html', msg = msg)
+#         else:
+#             err = 'Incorrect name / password !'
+#     return render_template('login.html', err = err)
+
+
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     msg = ''
-    err=''
+    err = ''
     if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
         email = request.form['email']
         password = request.form['password']
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM user WHERE email = % s AND password = % s', (email, password, ))
+        cursor.execute('SElect * from user WHERE email ="'+email+'"  AND password ="'+password+'" ')
         account = cursor.fetchone()
+        print(account)
         if account:
             session['loggedin'] = True
-            session['userid'] = account['userid']
-            session['email'] = account['email']
-            msg = account["name"]
-            logged_in = 1
-            return render_template('Dashboard.html', msg = msg)
+            session['userid'] = account[0]
+            session['email'] = account[3]
+            msg = account[1]
+            # logged_in = 1
+            return render_template('Dashboard.html', msg=msg)
         else:
-            err = 'Incorrect name / password !'
-    return render_template('login.html', err = err)
-
-
-
+            err = 'Incorrect name / password !' 
+    return render_template('login.html', err=err)
 
 
   
