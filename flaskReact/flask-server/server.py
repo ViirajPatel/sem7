@@ -50,8 +50,14 @@ def chart():
         dataSearch = request.form['search']
             # if dataSearch == "":
             #     err = "Please enter Symbol"
-      
-        arryList = ['BSE:TCS','BSE:ITC','BSE:IDEA']
+        userid = str(session['userid'])
+        cursor.execute('SElect stocks from stockportfolio WHERE userid ="'+userid+'"')
+        account = cursor.fetchall()
+        arryList = account
+
+
+
+
         jsonList = json.dumps(arryList)
         return render_template("chart.html",  symbol=dataSearch, arryList=jsonList, arrylen=len(arryList))
             # else:
@@ -104,8 +110,10 @@ def watchList():
         userid = str(session['userid'])
         for c in range(0,int(count)):
             # watchListArr.append(request.form['symbol'+str(c)])
+            tempSymbol = request.form['symbol'+str(c+1)]
+            symbol= tempSymbol.split(":")
             cursor.execute(
-                "INSERT INTO `stockportfolio`(`userid`, `stocks`) VALUES('"+userid+"', '"+request.form['symbol'+str(c+1)]+"')")
+                "INSERT INTO `stockportfolio`(`userid`, `stocks`) VALUES('"+userid+"', '"+symbol[1]+"')")
             
         arrJ = json.dumps(watchListArr)
         print(arrJ)

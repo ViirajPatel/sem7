@@ -7,11 +7,10 @@ mydb = mysql.connector.connect(
 )
 
 cursor = mydb.cursor()
-email="vjp264@hotmail.com"
-password = "123"
-data_user = (email,password)
-add_user = 'SElect * from DB.tbluser WHERE email = % s AND password=% s'
-
-cursor.execute('SElect * from user WHERE email = "'+email+'" AND password="'+password+'"')
+userid = "1"
+cursor.execute('SElect stocks from stockportfolio WHERE userid ="'+userid+'"')
 account = cursor.fetchall()
-print(account)
+
+list1 = account
+print(type(list1))
+print(account[0])
