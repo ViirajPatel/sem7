@@ -1,18 +1,16 @@
  
 from flask import Flask, render_template, request, redirect, url_for, session
-from flask_mysqldb import MySQL
-import MySQLdb.cursors
 import re
 import mysql.connector
-import subprocess
+
 import numpy as np
 from mainFiles import yfinance,prophetModel
 import plotly.express as px
-
+import time
 
 from pandas_datareader import data as pdr
 import pandas as pd
-from datetime import date
+from datetime import date, time
 import json
 import yfinance as yf
 yf.pdr_override() 
@@ -53,10 +51,6 @@ def chart():
             # if dataSearch == "":
             #     err = "Please enter Symbol"
       
- 
-     
-
-     
         arryList = ['BSE:TCS','BSE:ITC','BSE:IDEA']
         jsonList = json.dumps(arryList)
         return render_template("chart.html",  symbol=dataSearch, arryList=jsonList, arrylen=len(arryList))
@@ -72,7 +66,11 @@ def chart():
 
 @app.route("/profile")
 def profile():
-    return render_template('profile.html')
+    email = session['email']
+    cursor.execute('SElect * from user WHERE email ="'+email+'"')
+    account = cursor.fetchone()
+    
+    return render_template('profile.html',data=account)
 
 @app.route("/",methods = ['GET','POST'])
 def new():
@@ -83,14 +81,16 @@ def new():
         return render_template('Dashboard.html',msg = dataSearch)
 
         
-@app.route("/predict")
+@app.route("/predict", methods=['GET', 'POST'])
 def predict():
-    quote = "itc"
-    days= 100
-    result  = prophetModel.predictProphet(quote,days)
-    print(result)
-    subprocess.call(('prophetModel.py'))
-    return render_template('predict.html')
+    if request.method == 'GET':
+        return render_template('predict.html')
+    if request.method == 'POST':
+        quote = "tatamotors"
+        days= 100
+        result  = prophetModel.predictProphet(quote,days)
+        print(result)
+        return render_template('predictResult.html')
 
 @app.route("/watchList",methods = ['GET','POST'])
 def watchList():
@@ -118,12 +118,7 @@ def watchList():
         return render_template('watchList.html', msg=count )
   
 
-@app.route("/predictResult", methods=['GET', 'POST'])
-def predictResult():
-    if request.method == 'GET':
-        return render_template('predictResult.html')
-    if request.method == 'POST':
-        return render_template('predictResult.html' )
+
 
     
 
@@ -140,31 +135,6 @@ def home():
     else:
         return render_template("login.html", err=loginErr)
 
-
-
-
-# @app.route('/login', methods =['GET', 'POST'])
-# def login():
-#     msg = ''
-#     err=''
-#     if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
-#         email = request.form['email']
-#         password = request.form['password']
-#         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-#         cursor.execute('SELECT * FROM user WHERE email = % s AND password = % s', (email, password, ))
-#         account = cursor.fetchone()
-#         if account:
-#             session['loggedin'] = True
-#             session['userid'] = account['userid']
-#             session['email'] = account['email']
-#             msg = account["name"]
-#             logged_in = 1
-#             return render_template('Dashboard.html', msg = msg)
-#         else:
-#             err = 'Incorrect name / password !'
-#     return render_template('login.html', err = err)
-
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     msg = ''
@@ -172,22 +142,45 @@ def login():
     if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
         email = request.form['email']
         password = request.form['password']
-        cursor.execute('SElect * from user WHERE email ="'+email+'"  AND password ="'+password+'" ')
-        account = cursor.fetchone()
-        print(account)
-        if account:
-            session['loggedin'] = True
-            session['userid'] = account[0]
-            session['email'] = account[3]
-            username = "Hello!"+account[1]
-            # logged_in = 1
-            return render_template('Dashboard.html', username=username)
+        if(email=="admin" and password=="123"):
+            cursor.execute('SElect * from user')
+            data = cursor.fetchall()
+            print(data)
+            return render_template('AdminPanel.html',data=data)
         else:
-            err = 'Incorrect name / password !' 
+            cursor.execute('SElect * from user WHERE email ="'+email+'"  AND password ="'+password+'" ')
+            account = cursor.fetchone()
+            print(account)
+            if account:
+                session['loggedin'] = True
+                session['userid'] = account[0]
+                session['email'] = account[3]
+                username = "Hello!"+account[1]
+                # logged_in = 1
+                return render_template('Dashboard.html', username=username)
+            else:
+                err = 'Incorrect name / password !' 
     return render_template('login.html', err=err)
 
 
-  
+@app.route('/AdminPanel', methods=['GET', 'POST'])
+def admin():
+    if request.method=='GET':
+       cursor.execute('SElect * from user')
+       data = cursor.fetchall()
+
+       return render_template('AdminPanel.html', data=data)
+    else:
+
+        userid = request.form['userid']
+        cursor.execute('DELETE FROM `user` WHERE userid="'+userid+'"')
+        mydb.commit()
+        msg ="deleted!"
+        cursor.execute('SElect * from user')
+        data = cursor.fetchall()
+
+        return render_template('AdminPanel.html', msg=msg,data=data)
+
 @app.route('/logout')
 def logout():
     session.pop('loggedin', None)
@@ -206,8 +199,8 @@ def register():
         password = request.form['password']
         phoneno = request.form['phoneno']
         email = request.form['email']
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM user WHERE email = % s', (email, ))
+        
+        cursor.execute('SELECT * FROM user WHERE email ="'+email+'"')
         account = cursor.fetchone()
         if account:
             msg = 'EmailId already registered!'
@@ -218,8 +211,9 @@ def register():
         elif not name or not password or not email or not phoneno:
             msg = 'Please fill out the form !'
         else:
-            cursor.execute('INSERT INTO `user` (`userid`, `name`,`phoneno`, `email`, `password`) VALUES (NULL,% s, % s, % s, % s)', (name,phoneno, email, password, ))
-            mysql.connection.commit()
+            cursor.execute(
+                'INSERT INTO `user` (`userid`, `name`,`phoneno`, `email`, `password`) VALUES (NULL,"'+name+'",'+phoneno+',"'+email+'","'+password+'" )')
+            mydb.commit()
             msg = 'You have successfully registered !'
     elif request.method == 'POST':
         msg = 'Please fill out the form !'
@@ -227,16 +221,5 @@ def register():
 
 
 
-
-
-
-
-
-
-
-
-
-
 if __name__ =='__main__':  
     app.run(debug = True,port=8000)  
-    
