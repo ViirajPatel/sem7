@@ -70,11 +70,24 @@ def chart():
 
 
 
-@app.route("/profile")
+@app.route("/profile",methods = ['GET','POST'])
 def profile():
     email = session['email']
     cursor.execute('SElect * from user WHERE email ="'+email+'"')
     account = cursor.fetchone()
+    if request.method == 'POST':
+        name = request.form['name']
+        password = request.form['password']
+        phoneno = request.form['phoneno']
+        
+        userid = request.form['userid']
+        
+        
+        
+        cursor.execute(
+                'UPDATE `user` SET `name`="'+name+'",`phoneno`="'+phoneno+'",`password`="'+password+'" WHERE userid="'+userid+'"')
+        mydb.commit()
+        print('You have successfully registered !')
     
     return render_template('profile.html',data=account)
 
@@ -202,7 +215,7 @@ def admin():
       
 @app.route('/editProfile',methods=['GET', 'POST'])
 def update():
-    if request.method == 'POST' and 'name' in request.form and 'userid' in request.form and 'password' in request.form and 'email' in request.form :
+    if request.method == 'POST':
         name = request.form['name']
         password = request.form['password']
         phoneno = request.form['phoneno']
@@ -210,7 +223,7 @@ def update():
         userid = request.form['userid']
         
         
-  
+        
         cursor.execute(
                 'UPDATE `user` SET `name`="'+name+'",`phoneno`="'+phoneno+'",`password`="'+password+'" WHERE userid="'+userid+'"')
         mydb.commit()
