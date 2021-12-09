@@ -127,7 +127,17 @@
         </div>
     </header>
     {{msg}}
-    <table>
+    {{temp}}
+    <table class="table">
+
+    <th>
+
+<td>Name </td>
+<td>Contact Number</td>
+<td>E-Mail Id</td>
+<td>Action</td>
+
+    </th>
         
     {% for item in data %}
     <tr>
@@ -137,9 +147,15 @@
         <td>{{item[1]}}</td>
         <td>{{item[2]}}</td>
         <td>{{item[3]}}</td>
-        <td><form action="/AdminPanel" method=post>
+        <td colspan="2"><form action="/AdminPanel" method=post>
             <input type="hidden" name="userid" value="{{item[0]}}">
-<input type="submit" value="delete">
+<input type="submit" name="delete" value="delete">
+
+
+        <!-- </form>
+       <form action="/AdminPanel" method=post>
+            <input type="hidden" name="userid" value="{{item[0]}}"> -->
+<input type="submit" name="update" value="Update">
 
 
         </form></td>

@@ -181,13 +181,42 @@ def admin():
     else:
 
         userid = request.form['userid']
-        cursor.execute('DELETE FROM `user` WHERE userid="'+userid+'"')
-        mydb.commit()
-        msg ="deleted!"
-        cursor.execute('SElect * from user')
-        data = cursor.fetchall()
+        print(request.form)
+        try:
+            temp = request.form["delete"]
+            action =0
+        except:
+            action = 1
 
-        return render_template('AdminPanel.html', msg=msg,data=data)
+        if(action==0):
+            cursor.execute('DELETE FROM `user` WHERE userid="'+userid+'"')
+            mydb.commit()
+            msg ="deleted!"
+            cursor.execute('SElect * from user')
+            data = cursor.fetchall()
+        else:
+            cursor.execute('SElect * from user WHERE userid="'+userid+'"')
+            data = cursor.fetchall()
+            
+        return render_template('editProfile.html', data=data,msg=request.method)
+      
+@app.route('/editProfile',methods=['GET', 'POST'])
+def update():
+    if request.method == 'POST' and 'name' in request.form and 'userid' in request.form and 'password' in request.form and 'email' in request.form :
+        name = request.form['name']
+        password = request.form['password']
+        phoneno = request.form['phoneno']
+        
+        userid = request.form['userid']
+        
+        
+  
+        cursor.execute(
+                'UPDATE `user` SET `name`="'+name+'",`phoneno`="'+phoneno+'",`password`="'+password+'" WHERE userid="'+userid+'"')
+        mydb.commit()
+        print('You have successfully registered !')
+
+    return redirect('AdminPanel')
 
 @app.route('/logout')
 def logout():
