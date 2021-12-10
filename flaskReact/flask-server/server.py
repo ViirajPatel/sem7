@@ -4,7 +4,7 @@ import re
 import mysql.connector
 
 import numpy as np
-from mainFiles import yfinance,prophetModel
+from mainFiles import yfinance,prophetModel,mail
 import plotly.express as px
 import time
 
@@ -184,6 +184,27 @@ def login():
                 err = 'Incorrect name / password !' 
     return render_template('login.html', err=err)
 
+@app.route("/forgetPassword", methods=['GET', 'POST'])
+def forgetPassword():
+    if request.method=='GET':
+        return render_template("forgetPassword.html",email="",oaction="disabled")
+    else:
+    
+        try:
+            otp = request.form['otp']
+            if otp==session["otp"]:
+                print("*****************************")
+                return render_template("login.html" ,oaction="")
+            else:
+                email = request.form['email']
+                otp = mail.send_mail(email)
+                session['otp']=otp
+                return render_template("forgetPassword.html",email=email ,oaction="",err="OTP/Email Wrong!!")
+        except:
+            email = request.form['email']
+            otp = mail.send_mail(email)
+            session['otp']=otp
+            return render_template("forgetPassword.html",email = email ,oaction="")
 
 @app.route('/AdminPanel', methods=['GET', 'POST'])
 def admin():
