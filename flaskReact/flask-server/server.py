@@ -75,6 +75,7 @@ def profile():
     email = session['email']
     cursor.execute('SElect * from user WHERE email ="'+email+'"')
     account = cursor.fetchone()
+    print(account)
     if request.method == 'POST':
         name = request.form['name']
         password = request.form['password']
@@ -211,7 +212,9 @@ def admin():
             cursor.execute('SElect * from user WHERE userid="'+userid+'"')
             data = cursor.fetchall()
             
-        return render_template('editProfile.html', data=data,msg=request.method)
+            return render_template('editProfile.html', data=data,msg=request.method)
+    return redirect('AdminPanel')
+
       
 @app.route('/editProfile',methods=['GET', 'POST'])
 def update():
@@ -228,8 +231,14 @@ def update():
                 'UPDATE `user` SET `name`="'+name+'",`phoneno`="'+phoneno+'",`password`="'+password+'" WHERE userid="'+userid+'"')
         mydb.commit()
         print('You have successfully registered !')
+    if(session.get('loggedin')==True):
+        email = session['email']
+        cursor.execute('SElect * from user WHERE email ="'+email+'"')
+        account = cursor.fetchone()
+        return render_template("profile.html",msg="Updated!",data=account)        
+    else:  
+        return redirect('AdminPanel')
 
-    return redirect('AdminPanel')
 
 @app.route('/logout')
 def logout():
