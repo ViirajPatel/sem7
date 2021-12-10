@@ -187,24 +187,31 @@ def login():
 @app.route("/forgetPassword", methods=['GET', 'POST'])
 def forgetPassword():
     if request.method=='GET':
-        return render_template("forgetPassword.html",email="",oaction="disabled")
+        return render_template("forgetPassword.html",email="",oaction="disabled",pstyle="style='display: none;'")
     else:
-    
         try:
             otp = request.form['otp']
             if otp==session["otp"]:
-                print("*****************************")
-                return render_template("login.html" ,oaction="")
+                return render_template("changePassword.html")
             else:
                 email = request.form['email']
                 otp = mail.send_mail(email)
                 session['otp']=otp
+                print("ndfabfbd")
                 return render_template("forgetPassword.html",email=email ,oaction="",err="OTP/Email Wrong!!")
         except:
             email = request.form['email']
             otp = mail.send_mail(email)
             session['otp']=otp
+            print("asdfusdgfsdfuyu")
             return render_template("forgetPassword.html",email = email ,oaction="")
+
+
+
+@app.route('/changePassword')
+def changePassword():
+    return "abc"
+
 
 @app.route('/AdminPanel', methods=['GET', 'POST'])
 def admin():
