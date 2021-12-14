@@ -190,17 +190,22 @@ def forgetPassword():
         return render_template("forgetPassword.html",email="",oaction="disabled",pstyle="style='display: none;'")
     else:
         email = request.form['email']  
-        try:
-            otp = request.form['otp']
-
-        except:
-            
-            otp = mail.send_mail(email)
-          
-        if otp==session["otp"]:
-            print('fbadj')
-            return render_template("changePassword.html",email = email ,oaction="")
-            
+        cursor.execute('SElect * from user WHERE email ="'+email+'"')
+        account = cursor.fetchone()
+        print(account)
+        if account:
+            try:
+                otp = request.form['otp']
+                if otp==session["otp"]:
+                    print('fbadj')
+                    return render_template("changePassword.html",email = email ,oaction="")
+            except:
+                otp = mail.send_mail(email)
+                session['otp']=otp
+                return render_template("forgetPassword.html",email = email ,oaction="")
+        else:
+            return render_template("forgetPassword.html",email="",oaction="disabled",err="EMail Invalid!!",pstyle="style='display: none;'")
+                
             
         # else:
         #     email = request.form['email']
@@ -209,15 +214,22 @@ def forgetPassword():
         #     print("ndfabfbd")
         #     return render_template("forgetPassword.html",email=email ,oaction="",err="OTP/Email Wrong!!")
     
-        session['otp']=otp
+            
         
         return render_template("forgetPassword.html",email = email ,oaction="")
 
 
 
-@app.route('/changePassword')
-def changePassword(email):
-    return render_template("forgetPassword.html",email = email ,oaction="")
+@app.route('/changePassword', methods=['GET', 'POST'])
+def changePassword():
+   
+    password=request.form['password']
+    email = request.form['email']
+    cursor.execute('UPDATE `user` SET `password`="'+password+'" WHERE email="'+email+'"')
+    mydb.commit()
+    return redirect('login')
+   
+
 
 
 @app.route('/AdminPanel', methods=['GET', 'POST'])
