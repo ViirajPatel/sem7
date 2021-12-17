@@ -5,7 +5,7 @@ import mysql.connector
 import os
 
 import numpy as np
-from mainFiles import yfinance,prophetModel,mail
+from mainFiles import yfinance,prophetModel,mail,ArimaModel
 import plotly.express as px
 import time
 
@@ -114,11 +114,10 @@ def predict():
         str  = quotetemp
         quote= str.split(":")
         days= 100
-        result  = prophetModel.predictProphet(quote[1],days)
-        # result  = prophetModel.predictProphet(quote[1],days)
+        prophetModel.predictProphet(quote[1],days)
+        ArimaModel.predictARMIA(quote[1],days)
 
-        print(result)
-        
+               
         return render_template('predictResult.html',name=quote[1])
 
 @app.route("/watchList",methods = ['GET','POST'])

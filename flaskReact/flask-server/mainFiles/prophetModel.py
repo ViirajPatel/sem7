@@ -5,18 +5,18 @@ import numpy as np
 import plotly.graph_objects as go
 import yfinance as yf
 from sklearn.metrics import r2_score, mean_absolute_error
-import time
+
 
 def predictProphet(quote, daysToPredict):
     
-    if os.path.exists("static/"+quote+".png"):
+    if os.path.exists("static/"+quote+"PROPHET.png"):
         print("okoko")
-        os.remove("static/"+quote+".png")
+        os.remove("static/"+quote+"PROPHET.png")
  
     data = yf.download(tickers=quote + '.NS', period='5y', interval='1d')
     data.to_csv("static/"+quote+".csv")
     df_temp = pd.read_csv("static/"+quote+".csv")
-    df_temp.tail()
+    
     df_temp.rename(columns={df_temp.columns[0]:"Datetime"})
     df=df_temp[[df_temp.columns[0],"Close"]]
     df.columns = ['ds', 'y']
