@@ -9,13 +9,13 @@ from sklearn.metrics import r2_score, mean_absolute_error
 
 def predictProphet(quote, daysToPredict):
     
-    if os.path.exists("static/"+quote+"PROPHET.png"):
+    if os.path.exists("static/prophet/"+quote+".png"):
         print("okoko")
-        os.remove("static/"+quote+"PROPHET.png")
+        os.remove("static/prophet/"+quote+".png")
  
     data = yf.download(tickers=quote + '.NS', period='5y', interval='1d')
-    data.to_csv("static/"+quote+".csv")
-    df_temp = pd.read_csv("static/"+quote+".csv")
+    data.to_csv("static/prophet/"+quote+".csv")
+    df_temp = pd.read_csv("static/prophet/"+quote+".csv")
     
     df_temp.rename(columns={df_temp.columns[0]:"Datetime"})
     df=df_temp[[df_temp.columns[0],"Close"]]
@@ -30,6 +30,6 @@ def predictProphet(quote, daysToPredict):
     mae = mean_absolute_error(df['y'], forecast.loc[:, 'yhat'][:-daysToPredict])
     r2 = r2_score(df['y'], forecast.loc[:, 'yhat'][:-daysToPredict])
     plotted = m.plot(forecast)
-    plotted.savefig("static/"+quote+"PROPHET.png")
+    plotted.savefig("static/prophet/"+quote+".png")
     
-    return rmse,mae,r2,plotted
+    return rmse,mae,r2,forecast['yhat']

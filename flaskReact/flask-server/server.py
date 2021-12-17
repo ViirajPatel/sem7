@@ -114,10 +114,12 @@ def predict():
         str  = quotetemp
         quote= str.split(":")
         days= 100
-        prophetModel.predictProphet(quote[1],days)
-        ArimaModel.predictARMIA(quote[1],days)
-
-               
+        arimaResult = ArimaModel.predictARMIA(quote[1],days)
+        prophetResult = prophetModel.predictProphet(quote[1],days)
+        
+        print(arimaResult[1])
+        print(prophetResult[3])
+        # tables=[df.to_html(classes='data')], titles=df.columns.values,
         return render_template('predictResult.html',name=quote[1])
 
 @app.route("/watchList",methods = ['GET','POST'])
