@@ -2,6 +2,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import re
 import mysql.connector
+import os
 
 import numpy as np
 from mainFiles import yfinance,prophetModel,mail
@@ -106,11 +107,19 @@ def predict():
     if request.method == 'GET':
         return render_template('predict.html')
     if request.method == 'POST':
-        quote = "tatamotors"
+        # if os.path.exists("static/chartProphet.png"):
+        #     print("okoko")
+        #     os.remove("static/chartProphet.png")
+        quotetemp = request.form['search']
+        str  = quotetemp
+        quote= str.split(":")
         days= 100
-        result  = prophetModel.predictProphet(quote,days)
+        result  = prophetModel.predictProphet(quote[1],days)
+        # result  = prophetModel.predictProphet(quote[1],days)
+
         print(result)
-        return render_template('predictResult.html')
+        
+        return render_template('predictResult.html',name=quote[1])
 
 @app.route("/watchList",methods = ['GET','POST'])
 def watchList():
@@ -328,4 +337,4 @@ def register():
 
 
 if __name__ =='__main__':  
-    app.run(debug = True,port=8000)  
+    app.run(debug = False,port=8000)  
