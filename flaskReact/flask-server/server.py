@@ -48,7 +48,8 @@ def chart():
 
     if session.get('loggedin')== True:
         # if request.method == "POST":
-        dataSearch = request.form['search']
+        dataSearch = "BSE:"+request.form['search']
+        print(dataSearch)
             # if dataSearch == "":
             #     err = "Please enter Symbol"
         userid = str(session['userid'])
@@ -136,8 +137,9 @@ def watchList():
             # watchListArr.append(request.form['symbol'+str(c)])
             tempSymbol = request.form['symbol'+str(c+1)]
             symbol= tempSymbol.split(":")
+            
             cursor.execute(
-                "INSERT INTO `stockportfolio`(`userid`, `stocks`) VALUES('"+userid+"', '"+symbol[1]+"')")
+                "INSERT INTO `stockportfolio`(`userid`, `stocks`) VALUES('"+userid+"', 'BSE:"+symbol[1]+"')")
             
         arrJ = json.dumps(watchListArr)
         print(arrJ)
@@ -338,4 +340,4 @@ def register():
 
 
 if __name__ =='__main__':  
-    app.run(debug = False,port=8000)  
+    app.run(debug = True,port=8000)  

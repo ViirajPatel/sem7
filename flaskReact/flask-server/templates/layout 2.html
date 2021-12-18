@@ -128,8 +128,11 @@
             
     
           </ul>
+         
           <form class="d-flex" method="post" action="{{ url_for('chart') }}">
-            <input class="form-control me-2" type="search" name='search' placeholder="BSE:SYMBOL" aria-label="Search">
+
+            <input class="form-control me-2" type="search" name='search' placeholder="SYMBOL"  aria-label="Search" required>
+            
             <button class="btn btn-outline-success" type="submit">Search</button>
           </form>
         </div>
