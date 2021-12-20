@@ -33,6 +33,8 @@ Watch List
 
 
         }
+       
+
 
         function addToWatchList(id)
         {
@@ -41,11 +43,12 @@ Watch List
             console.log(str);
             symbol = document.getElementById(id).value;
             console.log("I'm in!!!!!!" + symbol );
-            str += "<input type='text' name='symbol"+click+"' value='"+symbol+"' ><br>";
-            document.getElementById('symbols').innerHTML = str;      
-            document.getElementById('count').value = click                  
-        }
 
+            str += "<tr><td><input type='text' name='symbol"+click+"' id='symbolbtn"+click+"'  value='"+symbol+"'></td></tr>";
+            document.getElementById('symbols').innerHTML = str;      
+            document.getElementById('count').value = click      ;            
+        }
+        
         function myFunction() {
             console.log("I'm in!!!!!!");
 
@@ -88,15 +91,43 @@ Watch List
 
     <div id="symbolList">
        <form action="/watchList" method="post">
-        Selected Symbols
+        Selected Symbols display Here
  
-        <span id="symbols">
+        <table id="symbols">
 
-        </span>
+        </table>
+
         <input type="hidden" id="count" name="count" value="">
         <input type="submit" name="submit" value="Add To WatchList">
     </form>
     </div>
+   <hr>
+   Current WatchList   (Data Will be displayed at the side of chart)
+   <hr>
+ <table class="table">
+<tr><th>Stock Name</th><th></th></tr>
+        
+    {% for item in data %}
+    <tr>
+        
+      
+
+        <td>{{item[1]}}</td>
+      
+        <td colspan="2"><form  method=post>
+            <input type="hidden" name="stockname" value="{{item[1]}}">
+<input type="submit" name="delete" value="delete">
+
+
+
+
+
+        </form></td>
+    </tr>
+    
+    {% endfor %}
+    </table>
+
     {{msg}}
 </div>
 {% endblock %}

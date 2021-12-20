@@ -94,13 +94,13 @@ def profile():
     
     return render_template('profile.html',data=account)
 
-@app.route("/",methods = ['GET','POST'])
-def new():
-    if request.method == 'GET' :
-        return render_template('Dashboard.html',  )
-    if request.method == 'POST':
-        dataSearch = request.form['search']
-        return render_template('Dashboard.html',msg = dataSearch)
+# @app.route("/home",methods = ['GET','POST'])
+# def new():
+#     if request.method == 'GET' :
+#         return render_template('Dashboard.html',  )
+#     if request.method == 'POST':
+#         dataSearch = request.form['search']
+#         return render_template('Dashboard.html',msg = dataSearch)
 
         
 @app.route("/predict", methods=['GET', 'POST'])
@@ -125,14 +125,36 @@ def predict():
 
 @app.route("/watchList",methods = ['GET','POST'])
 def watchList():
+    userid = str(session['userid'])
     if request.method == 'GET':
-        return render_template('watchList.html')
+        cursor.execute('SElect * from stockportfolio where userid="'+userid+'"')
+        data = cursor.fetchall()
+        return render_template('watchList.html',data=data)
     if request.method == 'POST':
-        count  = int(request.form['count'])
-        print(type(count))
+        try:
+            temp = request.form["delete"]
+            action = 0
+        except:
+            action = 1
 
+        if(action==0):
+            stockname = request.form["stockname"]
+            print(stockname)
+            cursor.execute(
+                'DELETE FROM `stockportfolio` WHERE userid="'+userid+'" and stocks="'+stockname+'" ')
+            mydb.commit()
+            msg ="deleted!"
+            cursor.execute('SElect * from user')
+            data = cursor.fetchall()
+    
+        try:
+              count  = int(request.form['count'])
+        except:
+            count=0
+
+        print(count)
         watchListArr=[]
-        userid = str(session['userid'])
+        
         for c in range(0,int(count)):
             # watchListArr.append(request.form['symbol'+str(c)])
             tempSymbol = request.form['symbol'+str(c+1)]
@@ -148,8 +170,10 @@ def watchList():
         # cursor.execute("INSERT INTO `stockportfolio`(`userid`, `stocks`) VALUES (`"+userid+"`, `"+arrJ+"`)")
         # cursor.execute('INSERT INTO `stockportfolio`(`stocks`) VALUES( `["NSE: RELIANCE", "NSE: INFY"]`)')
         mydb.commit()
-
-        return render_template('watchList.html', msg=count )
+        cursor.execute(
+            'SElect * from stockportfolio where userid="'+userid+'"')
+        data = cursor.fetchall()
+        return render_template('watchList.html', msg=count,data=data )
   
 
 
@@ -169,7 +193,7 @@ def home():
     else:
         return render_template("login.html", err=loginErr)
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def login():
     msg = ''
     err = ''
@@ -189,7 +213,7 @@ def login():
                 session['loggedin'] = True
                 session['userid'] = account[0]
                 session['email'] = account[3]
-                username = "Hello!"+account[1]
+                username = "Hello! "+account[1]
                 # logged_in = 1
                 return render_template('Dashboard.html', username=username)
             else:
@@ -340,4 +364,4 @@ def register():
 
 
 if __name__ =='__main__':  
-    app.run(debug = False,port=8000)  
+    app.run(debug = True,port=8000)  
