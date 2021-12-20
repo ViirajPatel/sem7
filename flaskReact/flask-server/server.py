@@ -263,7 +263,7 @@ def changePassword():
     email = request.form['email']
     cursor.execute('UPDATE `user` SET `password`="'+password+'" WHERE email="'+email+'"')
     mydb.commit()
-    return redirect('login')
+    return redirect('/')
    
 
 

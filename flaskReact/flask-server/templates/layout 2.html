@@ -30,6 +30,16 @@
   position: absolute;
   width: 1600;
 } */
+#myVideo {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  z-index: -1000;
+  min-width: 100%;
+  min-height: 100%;
+  opacity: 10%;
+
+}
 
     /* .bg {
       
@@ -99,6 +109,9 @@
 
 
 <body>
+  <video autoplay muted loop id="myVideo">
+    <source src="static/bg.mp4" type="video/mp4">
+  </video>
   <header class="py-3 mb-3 border-bottom">
     <div class="container-fluid d-grid gap-4 align-items-center" style="grid-template-columns: 0fr 3fr 2.5fr 1fr; ">
 
