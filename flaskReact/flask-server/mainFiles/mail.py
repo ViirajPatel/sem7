@@ -10,7 +10,7 @@ def send_mail(mail):
     # mailadd = sys.argv[1]
     # print(mailadd)
 
-    server.login('no.reply.stock.price.prediction@gmail.com', '7046529350')
+    server.login('no.reply.stock.price.prediction@gmail.com', 'PASSWORD')
    
     
     subject = "OTP"
