@@ -15,7 +15,7 @@
 
       <h1 class="h3 mb-3 fw-normal"><b>Registration</b></h1><hr>
       <div class="form-floating" style="margin: 10px 10px 0 0;">
-        <input type="text" class="form-control" id="name" name="name" placeholder="name">
+        <input type="text" class="form-control" id="name" name="name" placeholder="name" required> 
         <label for="floatingInput">Name</label>
       </div>
       <div class="form-floating" style="margin: 10px 10px 0 0;">
@@ -25,15 +25,36 @@
       </div>
 
       <div class="form-floating" style="margin: 10px 10px 0 0;">
-        <input type="text" class="form-control" id="email" name="email" placeholder="name@example.com">
+        <input type="text" class="form-control" id="email" name="email" placeholder="name@example.com" required>
         <label for="floatingInput">Email address</label>
       </div>
 
+     
+      
       <div class="form-floating" style="margin: 10px 10px 0 0;">
-        <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+        <input type="password" class="form-control" id="pwd" name="password" placeholder="Password" required>
         <label for="floatingPassword">Password</label>
       </div>
+      <div class="form-floating" style="margin: 10px 10px 0 0;">
+        <input type="password" class="form-control" id="cpwd" onkeyup="validate()" name="cpassword" placeholder="Confirm Password" required>
+        <label for="floatingPassword">Confirm Password</label>
+      </div>
+<script>
+  function validate() {
+    console.log("abc");
+    var pwd = document.getElementById('pwd').value;
+    var cpwd = document.getElementById('cpwd').value;
+    if (pwd == cpwd) {
+      document.getElementById('submit').type = 'submit';
+      document.getElementById('note').innerText = 'Matched!';
+    }
+    else {
+      document.getElementById('submit').type = 'button';
+      document.getElementById('note').innerText = 'Unmatched!';
+    }
 
+  }
+</script>
       <br>
       <div class="checkbox mb-3">
         <label>
@@ -41,9 +62,10 @@
         </label>
       </div>
       <hr>
-      <button class="w-100 btn btn-lg btn-primary" type="submit">Register</button>
+      <button class="w-100 btn btn-lg btn-primary" id="submit" type="submit">Register</button>
       &nbsp;
       <div class="msg">{{ msg }}</div>
+      <div id="note"></div>
 
     </form>
   </main>

@@ -31,5 +31,6 @@ def predictProphet(quote, daysToPredict):
     r2 = r2_score(df['y'], forecast.loc[:, 'yhat'][:-daysToPredict])
     plotted = m.plot(forecast)
     plotted.savefig("static/prophet/"+quote+".png")
+    output = forecast[:-daysToPredict]
     
-    return rmse,mae,r2,forecast['yhat']
+    return rmse,mae,r2,output['yhat']

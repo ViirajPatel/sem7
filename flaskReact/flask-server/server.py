@@ -1,4 +1,5 @@
  
+import base64
 from flask import Flask, render_template, request, redirect, url_for, session
 import re
 import mysql.connector
@@ -85,10 +86,14 @@ def profile():
         
         userid = request.form['userid']
         
-        
+        passObj = password.encode("utf-8")
+        encodeed = base64.b64encode(passObj)
+        strpwd = str(encodeed).split("'")
+
+        strpass = strpwd[1]
         
         cursor.execute(
-                'UPDATE `user` SET `name`="'+name+'",`phoneno`="'+phoneno+'",`password`="'+password+'" WHERE userid="'+userid+'"')
+                'UPDATE `user` SET `name`="'+name+'",`phoneno`="'+phoneno+'",`password`="'+strpass+'" WHERE userid="'+userid+'"')
         mydb.commit()
         print('You have successfully registered !')
     
@@ -118,10 +123,14 @@ def predict():
         arimaResult = ArimaModel.predictARMIA(quote[1],days)
         prophetResult = prophetModel.predictProphet(quote[1],days)
         
-        print(arimaResult[1])
-        print(prophetResult[3])
+        
+        arimaoutput = arimaResult[1]
+        arimarmse = arimaResult[0]
+        prophetrmse = prophetResult[0]
+        prophetoutput = prophetResult[3]
+        print(prophetoutput)
         # tables=[df.to_html(classes='data')], titles=df.columns.values,
-        return render_template('predictResult.html',name=quote[1])
+        return render_template('predictResult.html',name=quote[1],ao=arimaoutput,po=prophetoutput[-100:],ar=arimarmse,pr=prophetrmse)
 
 @app.route("/watchList",methods = ['GET','POST'])
 def watchList():
@@ -173,7 +182,7 @@ def watchList():
         cursor.execute(
             'SElect * from stockportfolio where userid="'+userid+'"')
         data = cursor.fetchall()
-        return render_template('watchList.html', msg=count,data=data )
+        return render_template('watchList.html', msg="Added!",data=data )
   
 
 
@@ -200,13 +209,19 @@ def login():
     if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
         email = request.form['email']
         password = request.form['password']
+        
         if(email=="admin" and password=="123"):
             cursor.execute('SElect * from user')
             data = cursor.fetchall()
             print(data)
             return render_template('AdminPanel.html',data=data)
         else:
-            cursor.execute('SElect * from user WHERE email ="'+email+'"  AND password ="'+password+'" ')
+            passObj = password.encode("utf-8")
+            encodeed = base64.b64encode(passObj)
+            strpwd = str(encodeed).split("'")
+
+            strpass = strpwd[1]
+            cursor.execute('SElect * from user WHERE email ="'+email+'"  AND password ="'+strpass+'" ')
             account = cursor.fetchone()
             print(account)
             if account:
@@ -223,7 +238,7 @@ def login():
 @app.route("/forgetPassword", methods=['GET', 'POST'])
 def forgetPassword():
     if request.method=='GET':
-        return render_template("forgetPassword.html",email="",oaction="disabled",pstyle="style='display: none;'")
+        return render_template("forgetPassword.html",email="",oaction="disabled",btnval="Send OTP",pstyle="style='display: none;'")
     else:
         email = request.form['email']  
         cursor.execute('SElect * from user WHERE email ="'+email+'"')
@@ -234,13 +249,13 @@ def forgetPassword():
                 otp = request.form['otp']
                 if otp==session["otp"]:
                     print('fbadj')
-                    return render_template("changePassword.html",email = email ,oaction="")
+                    return render_template("changePassword.html",email = email,oaction="")
             except:
                 otp = mail.send_mail(email)
                 session['otp']=otp
-                return render_template("forgetPassword.html",email = email ,oaction="")
+                return render_template("forgetPassword.html", email=email, btnval="Confirm OTP", oaction="")
         else:
-            return render_template("forgetPassword.html",email="",oaction="disabled",err="EMail Invalid!!",pstyle="style='display: none;'")
+            return render_template("forgetPassword.html", email="", oaction="disabled",btnval="Send OTP", err="EMail Invalid!!", pstyle="style='display: none;'")
                 
             
         # else:
@@ -260,8 +275,13 @@ def forgetPassword():
 def changePassword():
    
     password=request.form['password']
+    passObj = password.encode("utf-8")
+    encodeed = base64.b64encode(passObj)
+    strpwd = str(encodeed).split("'")
+
+    strpass = strpwd[1]
     email = request.form['email']
-    cursor.execute('UPDATE `user` SET `password`="'+password+'" WHERE email="'+email+'"')
+    cursor.execute('UPDATE `user` SET `password`="'+strpass+'" WHERE email="'+email+'"')
     mydb.commit()
     return redirect('/')
    
@@ -295,7 +315,7 @@ def admin():
             cursor.execute('SElect * from user WHERE userid="'+userid+'"')
             data = cursor.fetchall()
             
-            return render_template('editProfile.html', data=data,msg=request.method)
+            return render_template('editProfile.html', data=data)
     return redirect('AdminPanel')
 
       
@@ -303,20 +323,37 @@ def admin():
 def update():
     if request.method == 'POST':
         name = request.form['name']
-        password = request.form['password']
         phoneno = request.form['phoneno']
-        
+
         userid = request.form['userid']
+        # password = request.form['password']
+        # if(password==""):
+            
+       
+        #     passObj = password.encode("utf-8")
+        #     encodeed = base64.b64encode(passObj)
+        #     strpwd = str(encodeed).split("'")
+
+        #     strpass = strpwd[1]
+        # else:
+    
+        #     strpass = "123"
+           
+        # print(strpass)
         
-        
+        # passObj = password.encode("utf-8")
+        # encodeed = base64.b64encode(passObj)
+        # strpwd = str(encodeed).split("'")
+
+        # strpass = strpwd[1]
         
         cursor.execute(
-                'UPDATE `user` SET `name`="'+name+'",`phoneno`="'+phoneno+'",`password`="'+password+'" WHERE userid="'+userid+'"')
+                'UPDATE `user` SET `name`="'+name+'",`phoneno`="'+phoneno+'" WHERE userid="'+userid+'"')
         mydb.commit()
         print('You have successfully registered !')
     if(session.get('loggedin')==True):
         email = session['email']
-        cursor.execute('SElect * from user WHERE email ="'+email+'"')
+        cursor.execute('Select * from user WHERE email ="'+email+'"')
         account = cursor.fetchone()
         return render_template("profile.html",msg="Updated!",data=account)        
     else:  
@@ -353,8 +390,14 @@ def register():
         elif not name or not password or not email or not phoneno:
             msg = 'Please fill out the form !'
         else:
+            print(phoneno)
+            passObj = password.encode("utf-8")
+            encodeed = base64.b64encode(passObj)
+            strpwd = str(encodeed).split("'")
+         
+            strpass = strpwd[1]
             cursor.execute(
-                'INSERT INTO `user` (`userid`, `name`,`phoneno`, `email`, `password`) VALUES (NULL,"'+name+'",'+phoneno+',"'+email+'","'+password+'" )')
+                'INSERT INTO `user` (`userid`, `name`,`phoneno`, `email`, `password`) VALUES (NULL,"'+name+'","'+phoneno+'","'+email+'","'+strpass+'" )')
             mydb.commit()
             msg = 'You have successfully registered !'
     elif request.method == 'POST':
@@ -364,4 +407,4 @@ def register():
 
 
 if __name__ =='__main__':  
-    app.run(debug = True,port=8000)  
+    app.run(debug = False,port=8000)  
